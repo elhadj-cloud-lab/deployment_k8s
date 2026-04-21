@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dev-postgres-auth
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: postgresql
+    targetRevision: 15.*
+    helm:
+      releaseName: postgres-auth
+      values: |
+        auth:
+          username: auth_user
+          password: auth_password
+          database: auth_db
+        primary:
+          persistence:
+            enabled: true
+            size: 1Gi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

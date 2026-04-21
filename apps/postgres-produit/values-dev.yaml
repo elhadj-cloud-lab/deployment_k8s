@@ -1,0 +1,9 @@
+auth:
+  username: produit_user
+  password: produit_password
+  database: produit_db
+
+primary:
+  persistence:
+    enabled: true
+    size: 1Gi

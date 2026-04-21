@@ -1,0 +1,9 @@
+auth:
+  username: auth_user
+  password: auth_password
+  database: auth_db
+
+primary:
+  persistence:
+    enabled: true
+    size: 5Gi

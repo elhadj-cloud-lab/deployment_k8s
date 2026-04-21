@@ -1,0 +1,10 @@
+image:
+  repository: ghcr.io/elhadj-cloud-lab/produits_front
+  tag: latest
+
+replicaCount: 2
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
