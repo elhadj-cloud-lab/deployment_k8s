@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/elhadj-cloud-lab/authentification_service
-  tag: 4b10790
+  tag: dev-137415a
 
 replicaCount: 1
 
