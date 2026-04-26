@@ -12,7 +12,7 @@ spec:
     helm:
       releaseName: produits-front
       valueFiles:
-        - ../../apps/produits-front/values-prod.yaml
+        - ../../apps/produits_front/values-prod.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: prod

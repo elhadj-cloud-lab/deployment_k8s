@@ -60,6 +60,52 @@ Les dépôts applicatifs (ex: `produits_front`, `produit_back`, `authentificatio
 - `GITOPS_REPO` (GitHub variable): repo GitOps cible (ex: `elhadj-cloud-lab/deployment_k8s`)
 - `GITOPS_TOKEN` (GitHub secret): token avec droits d'écriture sur le repo GitOps
 
+## Secrets (Sealed Secrets)
+
+Ce dépôt supporte la gestion GitOps des secrets via **Bitnami Sealed Secrets**.
+
+Manifests ArgoCD (installation du controller):
+
+- DEV: `argocd/applications/dev/sealed-secrets.yaml`
+- PROD: `argocd/applications/prod/sealed-secrets.yaml`
+
+### Principe
+
+- Tu ne commits **jamais** de `Secret` en clair.
+- Tu commits un `SealedSecret` (chiffré), qui sera déchiffré en `Secret` par le controller dans le cluster.
+
+### Important
+
+- Le chiffrement dépend de la **clé du cluster**.
+- Un `SealedSecret` généré pour le cluster DEV ne peut pas forcément être déchiffré en PROD (bonnes pratiques: séparer dev/prod).
+
+### Installation de kubeseal
+
+Installer l'outil `kubeseal` sur ta machine (Windows) via la méthode de ton choix (release GitHub Bitnami).
+
+### Générer un SealedSecret (exemple)
+
+1) Créer un secret local en YAML (sans l'appliquer) :
+
+```bash
+kubectl -n dev create secret generic produit-back-secrets \
+  --from-literal=JWT_SECRET=change-me \
+  --dry-run=client -o yaml > secret.yaml
+```
+
+2) Le chiffrer avec kubeseal (en récupérant le certificat du controller) :
+
+```bash
+kubeseal \
+  --controller-namespace sealed-secrets \
+  --controller-name sealed-secrets-controller \
+  --format yaml < secret.yaml > sealedsecret.yaml
+```
+
+3) Commit `sealedsecret.yaml` dans Git (dans un dossier dédié, par ex `apps/<service>/sealedsecrets/`).
+
+4) ArgoCD synchronise -> le controller crée automatiquement le `Secret`.
+
 ## Ingress Controller (NGINX)
 
 Ce dépôt gère aussi l'installation de **ingress-nginx** via ArgoCD:

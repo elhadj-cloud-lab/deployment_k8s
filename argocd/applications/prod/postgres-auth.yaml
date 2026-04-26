@@ -14,8 +14,8 @@ spec:
       values: |
         auth:
           username: auth_user
-          password: auth_password
           database: auth_db
+          existingSecret: postgres-auth-credentials
         primary:
           persistence:
             enabled: true

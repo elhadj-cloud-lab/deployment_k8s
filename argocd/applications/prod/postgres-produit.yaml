@@ -14,8 +14,8 @@ spec:
       values: |
         auth:
           username: produit_user
-          password: produit_password
           database: produit_db
+          existingSecret: postgres-produit-credentials
         primary:
           persistence:
             enabled: true
