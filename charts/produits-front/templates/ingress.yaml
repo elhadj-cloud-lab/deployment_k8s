@@ -1,0 +1,57 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "produits-front.fullname" . }}
+  labels:
+{{ include "produits-front.labels" . | indent 4 }}
+{{- with .Values.ingress.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+{{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
+{{- end }}
+{{- if .Values.ingress.tls }}
+  tls:
+{{ toYaml .Values.ingress.tls | indent 4 }}
+{{- end }}
+  rules:
+    {{- if .Values.ingress.host }}
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: {{ .Values.ingress.pathType }}
+            backend:
+              service:
+                name: {{ include "produits-front.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}
+          - path: /api
+            pathType: {{ .Values.ingress.pathType }}
+            backend:
+              service:
+                name: {{ .Values.ingress.backend.serviceName }}
+                port:
+                  number: {{ .Values.ingress.backend.servicePort }}
+    {{- else }}
+    - http:
+        paths:
+          - path: /
+            pathType: {{ .Values.ingress.pathType }}
+            backend:
+              service:
+                name: {{ include "produits-front.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}
+          - path: /api
+            pathType: {{ .Values.ingress.pathType }}
+            backend:
+              service:
+                name: {{ .Values.ingress.backend.serviceName }}
+                port:
+                  number: {{ .Values.ingress.backend.servicePort }}
+    {{- end }}
+{{- end }}

@@ -8,3 +8,14 @@ service:
   type: ClusterIP
   port: 80
   targetPort: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "false"
+  host: "produits.dev.bestech.com"
+  pathType: Prefix
+  backend:
+    serviceName: produit-back
+    servicePort: 80

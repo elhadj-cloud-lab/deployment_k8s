@@ -13,3 +13,14 @@ service:
 containerPort: 80
 
 resources: {}
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  host: ""
+  pathType: Prefix
+  tls: []
+  backend:
+    serviceName: produit-back
+    servicePort: 80
