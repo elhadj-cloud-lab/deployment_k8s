@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/elhadj-cloud-lab/produits_front
-  tag: latest
+  tag: prod-4989fb7
 
 replicaCount: 2
 
