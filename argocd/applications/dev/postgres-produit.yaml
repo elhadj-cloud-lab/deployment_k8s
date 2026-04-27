@@ -16,6 +16,8 @@ spec:
           username: produit_user
           database: produit_db
           existingSecret: postgres-produit-credentials
+        image:
+          tag: 16.4.0-debian-12-r0
         primary:
           persistence:
             enabled: true

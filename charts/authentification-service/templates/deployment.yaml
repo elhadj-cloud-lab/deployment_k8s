@@ -27,6 +27,9 @@ spec:
           env:
             - name: JAVA_OPTS
               value: {{ .Values.javaOpts | quote }}
+{{- with .Values.env }}
+{{ toYaml . | indent 12 }}
+{{- end }}
           readinessProbe:
             httpGet:
               path: /users/actuator/health

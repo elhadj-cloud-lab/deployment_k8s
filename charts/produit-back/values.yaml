@@ -12,4 +12,6 @@ service:
 
 containerPort: 8080
 
+env: []
+
 resources: {}

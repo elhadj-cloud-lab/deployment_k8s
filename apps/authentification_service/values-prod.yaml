@@ -6,6 +6,22 @@ replicaCount: 2
 
 javaOpts: ""
 
+env:
+  - name: SPRING_DATASOURCE_URL_USER
+    value: jdbc:postgresql://postgres-auth-postgresql:5432/auth_db
+  - name: SPRING_DATASOURCE_USERNAME
+    value: auth_user
+  - name: SPRING_DATASOURCE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: postgres-auth-credentials
+        key: password
+  - name: JWT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: authentification-service-secrets
+        key: jwt-secret
+
 service:
   type: ClusterIP
   port: 80

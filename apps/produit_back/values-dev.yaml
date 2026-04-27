@@ -4,6 +4,17 @@ image:
 
 replicaCount: 1
 
+env:
+  - name: SPRING_DATASOURCE_URL
+    value: jdbc:postgresql://postgres-produit-postgresql:5432/produit_db
+  - name: SPRING_DATASOURCE_USERNAME
+    value: produit_user
+  - name: SPRING_DATASOURCE_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: postgres-produit-credentials
+        key: password
+
 service:
   type: ClusterIP
   port: 80

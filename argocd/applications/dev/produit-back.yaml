@@ -12,7 +12,7 @@ spec:
     helm:
       releaseName: produit-back
       valueFiles:
-        - ../../apps/produit-back/values-dev.yaml
+        - ../../apps/produit_back/values-dev.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: dev
