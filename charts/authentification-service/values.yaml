@@ -16,6 +16,8 @@ javaOpts: ""
 
 env: []
 
+initContainers: []
+
 resources: {}
 
 ingress:

@@ -15,6 +15,21 @@ env:
         name: postgres-produit-credentials
         key: password
 
+initContainers:
+  - name: wait-for-db
+    image: busybox:1.36
+    command:
+      - sh
+      - -c
+      - >-
+        echo Waiting for postgres-produit-postgresql:5432...;
+        for i in $(seq 1 120); do
+          nc -z postgres-produit-postgresql 5432 && exit 0;
+          sleep 2;
+        done;
+        echo DB not reachable;
+        exit 1
+
 service:
   type: ClusterIP
   port: 80

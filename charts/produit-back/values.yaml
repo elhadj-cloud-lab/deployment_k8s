@@ -14,4 +14,6 @@ containerPort: 8080
 
 env: []
 
+initContainers: []
+
 resources: {}
