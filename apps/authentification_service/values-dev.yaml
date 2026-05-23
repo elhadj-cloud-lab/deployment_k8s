@@ -21,6 +21,8 @@ env:
       secretKeyRef:
         name: authentification-service-secrets
         key: jwt-secret
+  - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+    value: update
 
 initContainers:
   - name: wait-for-db

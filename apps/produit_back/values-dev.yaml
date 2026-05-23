@@ -14,6 +14,10 @@ env:
       secretKeyRef:
         name: postgres-produit-credentials
         key: password
+  - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+    value: update
+  - name: SPRING_JPA_SHOW_SQL
+    value: "true"
 
 initContainers:
   - name: wait-for-db
