@@ -17,5 +17,5 @@ ingress:
   host: "produits.dev.bestech.com"
   pathType: Prefix
   backend:
-    serviceName: produit-front
+    serviceName: produits-front
     servicePort: 80
