@@ -6,32 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://charts.bitnami.com/bitnami
-    chart: postgresql
-    targetRevision: 15.*
-    helm:
-      releaseName: postgres-auth
-      values: |
-        auth:
-          username: auth_user
-          database: auth_db
-          existingSecret: postgres-auth-credentials
-        image:
-          tag: 16.4.0-debian-12-r0
-        volumePermissions:
-          enabled: true
-        primary:
-          persistence:
-            enabled: true
-            size: 1Gi
-          containerSecurityContext:
-            readOnlyRootFilesystem: false
-          extraVolumes:
-            - name: postgresql-run
-              emptyDir: {}
-          extraVolumeMounts:
-            - name: postgresql-run
-              mountPath: /var/run/postgresql
+    repoURL: https://github.com/elhadj-cloud-lab/deployment_k8s.git
+    targetRevision: main
+    path: apps/postgres-auth/overlays/dev
   destination:
     server: https://kubernetes.default.svc
     namespace: dev

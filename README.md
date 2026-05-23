@@ -14,6 +14,7 @@ Ce dépôt contient l'état désiré (**GitOps**) de la plateforme `elhadj-cloud
   - Charts Helm (1 chart par service)
 - `apps/`
   - Values Helm par environnement (fichiers `values-dev.yaml` / `values-prod.yaml`)
+  - PostgreSQL natif : `apps/postgres-auth/` et `apps/postgres-produit/` (Kustomize base + overlays dev/prod)
 - `argocd/applications/`
   - Manifests ArgoCD `Application` pour dev et prod
     - `argocd/applications/dev/`
@@ -148,32 +149,20 @@ Le chart `charts/produits-front` contient un template `Ingress` capable de route
 
 ## Dépannage
 
-### Minikube DEV — PostgreSQL CrashLoop + apps bloquées en Init
+### PostgreSQL (manifests natifs)
 
-Symptômes typiques :
+PostgreSQL est déployé en **manifests Kustomize** (`postgres:15-alpine`), sans chart Bitnami ni initContainer `init-chmod-data` :
 
-- `postgres-auth-postgresql` : `chmod: /var/run/postgresql: Read-only file system`
-- `authentification-service` / `produit-back` : `Init:0/1` sur `wait-for-db`
+- `apps/postgres-auth/base/` — StatefulSet + Service `postgres-auth:5432`
+- `apps/postgres-produit/base/` — StatefulSet + Service `postgres-produit:5432`
+- Overlays : `overlays/dev` (1Gi), `overlays/prod` (5Gi)
 
-Cause : chart Bitnami PostgreSQL 15+ avec `readOnlyRootFilesystem` (ou drift cluster après un ancien `diagnostic.sh` qui forçait `postgres:15-alpine`).
+Les backends utilisent les hostnames :
 
-Correction GitOps (déjà dans ce repo) :
+- `jdbc:postgresql://postgres-auth:5432/auth_db`
+- `jdbc:postgresql://postgres-produit:5432/produit_db`
 
-- `volumePermissions.enabled: true`
-- `primary.containerSecurityContext.readOnlyRootFilesystem: false`
-- `emptyDir` monté sur `/var/run/postgresql`
-
-Appliquer sur le cluster :
-
-```bash
-cd deployment_k8s
-chmod +x scripts/fix-minikube-dev.sh
-./scripts/fix-minikube-dev.sh
-# si postgres-auth reste en erreur après un mauvais patch manuel :
-./scripts/fix-minikube-dev.sh --reset-auth-pvc
-```
-
-**Ne plus utiliser** `diagnostic.sh` (script obsolète et dangereux).
+Secrets : `postgres-auth-credentials` / `postgres-produit-credentials` (clé `password`).
 
 ### ArgoCD
 

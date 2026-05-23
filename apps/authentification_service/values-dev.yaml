@@ -8,7 +8,7 @@ javaOpts: ""
 
 env:
   - name: SPRING_DATASOURCE_URL
-    value: jdbc:postgresql://postgres-auth-postgresql:5432/auth_db
+    value: jdbc:postgresql://postgres-auth:5432/auth_db
   - name: SPRING_DATASOURCE_USERNAME
     value: auth_user
   - name: SPRING_DATASOURCE_PASSWORD
@@ -30,7 +30,7 @@ initContainers:
       - -c
       - |
         set -e
-        host="postgres-auth-postgresql"
+        host="postgres-auth"
         port="5432"
         echo "Waiting for ${host}:${port}..."
         i=0
