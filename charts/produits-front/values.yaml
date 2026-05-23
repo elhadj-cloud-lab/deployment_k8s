@@ -12,6 +12,14 @@ service:
 
 containerPort: 80
 
+# Nginx sert le build Angular (sortie dans dist/<projet>/browser/).
+nginx:
+  enabled: true
+  image: nginx:1.27-alpine
+  imagePullPolicy: IfNotPresent
+  # Chemin des assets dans l'image applicative (initContainer)
+  sourcePath: /dist/Produits_front/browser
+
 resources: {}
 
 ingress:
