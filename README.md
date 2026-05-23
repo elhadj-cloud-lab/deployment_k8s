@@ -148,6 +148,33 @@ Le chart `charts/produits-front` contient un template `Ingress` capable de route
 
 ## Dépannage
 
+### Minikube DEV — PostgreSQL CrashLoop + apps bloquées en Init
+
+Symptômes typiques :
+
+- `postgres-auth-postgresql` : `chmod: /var/run/postgresql: Read-only file system`
+- `authentification-service` / `produit-back` : `Init:0/1` sur `wait-for-db`
+
+Cause : chart Bitnami PostgreSQL 15+ avec `readOnlyRootFilesystem` (ou drift cluster après un ancien `diagnostic.sh` qui forçait `postgres:15-alpine`).
+
+Correction GitOps (déjà dans ce repo) :
+
+- `volumePermissions.enabled: true`
+- `primary.containerSecurityContext.readOnlyRootFilesystem: false`
+- `emptyDir` monté sur `/var/run/postgresql`
+
+Appliquer sur le cluster :
+
+```bash
+cd deployment_k8s
+chmod +x scripts/fix-minikube-dev.sh
+./scripts/fix-minikube-dev.sh
+# si postgres-auth reste en erreur après un mauvais patch manuel :
+./scripts/fix-minikube-dev.sh --reset-auth-pvc
+```
+
+**Ne plus utiliser** `diagnostic.sh` (script obsolète et dangereux).
+
 ### ArgoCD
 
 - Lister les Applications:

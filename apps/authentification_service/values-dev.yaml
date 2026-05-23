@@ -28,13 +28,21 @@ initContainers:
     command:
       - sh
       - -c
-      - >-
-        echo Waiting for postgres-auth-postgresql:5432...;
-        for i in $(seq 1 120); do
-          nc -z postgres-auth-postgresql 5432 && exit 0;
-          sleep 2;
-        done;
-        echo DB not reachable;
+      - |
+        set -e
+        host="postgres-auth-postgresql"
+        port="5432"
+        echo "Waiting for ${host}:${port}..."
+        i=0
+        while [ "$i" -lt 120 ]; do
+          if nc -z -w 2 "$host" "$port" 2>/dev/null; then
+            echo "Database is reachable."
+            exit 0
+          fi
+          i=$((i + 1))
+          sleep 2
+        done
+        echo "Database not reachable after 240s."
         exit 1
 
 service:
