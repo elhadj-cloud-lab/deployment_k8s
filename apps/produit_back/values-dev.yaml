@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/elhadj-cloud-lab/produit_back
-  tag: dev-d6c15ce
+  tag: dev-7290d14
 
 replicaCount: 1
 
